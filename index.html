@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Educational browser simulator of coronary stenting (PCI). Not clinical training or medical advice." />
+    <title>Cath Lab Simulator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 28s-11-7-11-15a6 6 0 0 1 11-3 6 6 0 0 1 11 3c0 8-11 15-11 15z' fill='%23e5484d'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div id="labels"></div>
+    <div id="hover-readout" class="hidden"></div>
+    <div id="fluoro-overlay" class="hidden">
+      <div class="fo-tl"><span id="fo-proj"></span></div>
+      <div class="fo-tr"><span id="fo-mode"></span> <span id="fo-fps"></span></div>
+      <div class="fo-bl" id="fo-info"></div>
+    </div>
+
+    <header id="hud" class="panel">
+      <button id="hud-view" title="Toggle 3D / X-ray (Tab)">3D</button>
+      <span id="hud-xray" class="pill">X-RAY OFF</span>
+      <span class="hud-stat" title="Fluoroscopy time">⏱ <b id="hud-fluoro">0:00</b></span>
+      <span class="hud-stat" title="Contrast used">💧 <b id="hud-contrast">0</b> ml</span>
+      <span class="spacer"></span>
+      <button id="hud-help" title="Keys help (H)">?</button>
+      <button id="hud-pause" title="Pause (Esc)">II</button>
+      <button id="hud-end" class="danger" title="End the case and open the debrief">End case</button>
+    </header>
+
+    <aside id="checklist" class="panel"></aside>
+
+    <aside id="mentor" class="panel">
+      <div class="mentor-head">
+        <span id="mentor-badge" class="badge hidden">DEMO</span>
+        <b id="mentor-title"></b>
+        <button id="mentor-toggle" class="icon" title="Collapse mentor (M)">–</button>
+      </div>
+      <div id="mentor-body">
+        <p id="mentor-goal" class="muted"></p>
+        <ul id="mentor-tasks"></ul>
+        <div class="progress"><div id="mentor-progress"></div></div>
+        <p id="mentor-hint" class="hint"></p>
+        <details id="mentor-why"><summary>Why this step?</summary><p id="mentor-why-text"></p></details>
+      </div>
+    </aside>
+
+    <aside id="vitals" class="panel">
+      <canvas id="ecg" width="320" height="84"></canvas>
+      <div class="vit-grid">
+        <div><small>HR</small><b id="v-hr" class="green">68</b></div>
+        <div><small>ART</small><b id="v-bp" class="red">132/76</b></div>
+        <div><small>SpO₂</small><b id="v-spo2" class="cyan">98</b></div>
+        <div><small>ST V2</small><b id="v-st" class="green">0.0</b></div>
+        <div><small>ACT</small><b id="v-act">128</b></div>
+      </div>
+      <div class="vit-buttons">
+        <button id="v-heparin" title="Give heparin (G)">Heparin (G)</button>
+        <button id="v-sound" title="Sound on/off (N)">Sound: on</button>
+      </div>
+      <div id="v-alarm" class="alarm hidden">ALARM</div>
+    </aside>
+
+    <section id="device" class="panel"></section>
+    <div id="messages"></div>
+    <nav id="toolbar" class="panel"></nav>
+
+    <div id="start" class="overlay">
+      <div class="card start-card">
+        <h1>Cath Lab Simulator</h1>
+        <p class="disclaimer"><b>Educational demo only.</b> This is a simplified coding project for learning and demonstration. It is <b>not</b> clinical training or medical advice, and its numbers are teaching approximations.</p>
+        <h2>The case</h2>
+        <p>A 68-year-old, 80 kg patient has exertional angina despite medical therapy. Stress testing shows anterior ischaemia. The diagnostic angiogram shows a <b>90% stenosis of the mid LAD</b>, between the first and second diagonal branches. Access: right radial artery.</p>
+        <h2>You will</h2>
+        <ol>
+          <li>Guide a 6F catheter from the wrist to the aortic root and engage the left main.</li>
+          <li>Inject contrast and read the angiogram in X-ray view.</li>
+          <li>Steer a 0.014" wire across the 90% lesion without forcing it.</li>
+          <li>Pre-dilate with a balloon, measure, then deploy a stent.</li>
+          <li>Confirm the result in two projections and read your debrief.</li>
+        </ol>
+        <h2>Controls</h2>
+        <p class="controls">1–7 tools · W/S or wheel advance/retract (Shift fine) · A/D rotate · E hold inflate / Q deflate · G heparin · 5 or C contrast · Space or 6 hold fluoro · Tab 3D/X-ray · V/arrows C-arm · F follow · L labels · H help · M mentor · N sound · Esc pause · drag / Ctrl+wheel orbit/zoom</p>
+        <div class="start-buttons">
+          <button id="btn-enter" class="primary">Enter the cath lab</button>
+          <button id="btn-demo">Watch a demo first</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pause" class="overlay hidden"><div class="card"><h2>Paused</h2><p>Press Esc or the button to continue.</p><button id="btn-resume" class="primary">Resume</button></div></div>
+    <div id="help" class="overlay hidden"><div class="card help-card"><h2>Controls</h2><div id="help-body"></div><button id="btn-help-close" class="primary">Close</button></div></div>
+    <div id="debrief" class="overlay hidden"><div class="card debrief-card" id="debrief-card"></div></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -288,7 +288,7 @@ export function stepSim(st: SimState, inp: SimInput, dt: number): void {
     pushMessage(st, `Stage ${i + 1} complete: ${STAGES[i].title}.`, 'ok');
   }
   if (after >= STAGES.length && !st.flags.allDone) st.flags.allDone = true;
-  if (st.flags.allDone && st.time > st.fluoro.cineUntil + 1) st.ended = true;
+  if (st.flags.allDone && !st.flags.keepExploring && st.time > st.fluoro.cineUntil + 1) st.ended = true;
 
   if (!st.log.length || st.time - st.log[st.log.length - 1].time >= 1) {
     st.log.push({ time: st.time, stage: after, ladFlow: st.ladFlow, hr: st.phys.hr, st: st.phys.st });
